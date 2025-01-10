@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
+
 public class Pocho {
     private Feed globalFeed;
     private ArrayList<User> users;
@@ -17,9 +19,9 @@ public class Pocho {
     
     public void createUser(){
         if (isLogged == true) throw new IllegalStateException("You cannot create a user while logged in");
-        System.out.println("Enter a username");
+        System.out.println("Create a username");
         String name = scanner.nextLine();
-        //Falta poner que pasa con usuario repetido
+        if (repeatedName(name)) throw new IllegalArgumentException("That username is already taken");
         System.out.println("Enter a password");
         String password = scanner.nextLine();
         User user = new User(name, password);
@@ -59,12 +61,27 @@ public class Pocho {
         System.out.println("User logged out succesfully");
     }        
 
-    public void publicStatus(String title, String text){
+    public void publicStatus(){
+        System.out.println("Insert a title for the post");
+        String title = scanner.nextLine();
+        System.out.println("What do you want to tell the world?");
+        String text = scanner.nextLine();
         Status statusPost = currentUser.newStatusPost(title, text);
         globalFeed.addPost(statusPost);
     }
 
     public void showGlobalFeed(){
         globalFeed.showFeed();
+    }
+
+    private boolean repeatedName(String name){
+        boolean repeated = false;
+        for (int i = 0; i < users.size() && repeated == false; i++){
+            if (users.get(i).getName().equals(name)){
+                repeated = true;
+            }
+            i++;    
+        }
+        return repeated;
     }
 }
